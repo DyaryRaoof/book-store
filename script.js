@@ -9,23 +9,11 @@ const author = form.elements[1];
 const addBtn = document.querySelector('#addBtn');
 const bookList = document.querySelector('#book-list');
 
-const removeBook = (i) => {
-  books = books.filter((a) => a !== books[i]);
-  console.log(i);
-  const bookElements = document.querySelectorAll('.book-element-wrapper');
-  bookList.removeChild(bookElements[i]);
-};
+function saveBooksLocally() {
+  localStorage.setItem('books', JSON.stringify(books));
+}
 
-const addEventToRemoveButtons = () => {
-  const removeBtns = document.querySelectorAll('.remove-button');
-  for (let i = 0; i < removeBtns.length; i += 1) {
-    removeBtns[i].addEventListener('click', () => {
-      removeBook(i);
-    });
-  }
-};
-
-const appendBook = (book) => {
+const appendBook = (book, index) => {
   const bookElement = document.createElement('div');
   bookElement.classList.add('book-element-wrapper');
   const titleSpan = document.createElement('span');
@@ -36,6 +24,7 @@ const appendBook = (book) => {
   const br2 = document.createElement('br');
   const rmvBtn = document.createElement('button');
   rmvBtn.classList.add('remove-button');
+
   rmvBtn.innerText = 'remove';
   const hr = document.createElement('hr');
 
@@ -45,12 +34,46 @@ const appendBook = (book) => {
   bookElement.appendChild(br2);
   bookElement.appendChild(rmvBtn);
   bookElement.appendChild(hr);
+  rmvBtn.addEventListener('click', () => {
+    bookElement.remove();
+    books = books.filter((a) => a !== books[index]);
+    saveBooksLocally();
+  });
+
   bookList.appendChild(bookElement);
-  addEventToRemoveButtons();
+  saveBooksLocally();
 };
 
-books.forEach((book) => {
-  appendBook(book);
+function appendAllBooks() {
+  books.forEach((book, index) => {
+    appendBook(book, index);
+  });
+}
+
+// const removeBook = (i) => {
+//   // bookList.removeChild(removeElement);
+//   // bookList.replaceChildren();
+//   // appendAllBooks();
+// };
+
+// const addEventToRemoveButtons = () => {
+//   const removeBtns = document.querySelectorAll('.remove-button');
+//   for (let i = 0; i < removeBtns.length; i += 1) {
+//     removeBtns[i].addEventListener('click', () => {
+//       removeBook(i, removeBtns[i].parentElement);
+//     });
+//   }
+// };
+
+window.addEventListener('load', () => {
+  books = JSON.parse(localStorage.getItem('books'));
+  if (books) {
+    if (books.length > 0) {
+      appendAllBooks();
+    }
+  } else {
+    books = [];
+  }
 });
 
 function Book(title, author) {
@@ -61,5 +84,5 @@ function Book(title, author) {
 addBtn.addEventListener('click', () => {
   const newBook = new Book(title.value, author.value);
   books.push(newBook);
-  appendBook(newBook);
+  appendBook(newBook, books.length - 1);
 });
