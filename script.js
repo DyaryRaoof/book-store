@@ -10,22 +10,14 @@ const addBtn = document.querySelector('#addBtn');
 const bookList = document.querySelector('#book-list');
 
 const removeBook = (i) => {
-  books = books.filter((a) => a !== books[i]);
-  console.log(i);
+  books = books.filter((book) => book !== books[i]);
   const bookElements = document.querySelectorAll('.book-element-wrapper');
+  console.log(i);
   bookList.removeChild(bookElements[i]);
-};
-
-const addEventToRemoveButtons = () => {
   const removeBtns = document.querySelectorAll('.remove-button');
-  for (let i = 0; i < removeBtns.length; i += 1) {
-    removeBtns[i].addEventListener('click', () => {
-      removeBook(i);
-    });
-  }
 };
 
-const appendBook = (book) => {
+const appendBook = (book, i) => {
   const bookElement = document.createElement('div');
   bookElement.classList.add('book-element-wrapper');
   const titleSpan = document.createElement('span');
@@ -46,11 +38,14 @@ const appendBook = (book) => {
   bookElement.appendChild(rmvBtn);
   bookElement.appendChild(hr);
   bookList.appendChild(bookElement);
-  addEventToRemoveButtons();
+
+  rmvBtn.addEventListener('click', () => {
+    removeBook(i);
+  });
 };
 
-books.forEach((book) => {
-  appendBook(book);
+books.forEach((book, i) => {
+  appendBook(book, i);
 });
 
 function Book(title, author) {
@@ -61,5 +56,5 @@ function Book(title, author) {
 addBtn.addEventListener('click', () => {
   const newBook = new Book(title.value, author.value);
   books.push(newBook);
-  appendBook(newBook);
+  appendBook(newBook, books.length - 1);
 });
