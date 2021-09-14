@@ -1,7 +1,23 @@
-const book1 = {
-  title: 'book1',
-  author: 'author1',
-};
+class Book {
+  static books = [];
+
+  constructor(title, author) {
+    this.title = title;
+    this.author = author;
+  }
+
+  static addBook(book) {
+    this.books.push(book);
+  }
+
+  static rmvBook(book) {
+    this.books = this.books.filter((a) => a !== book);
+  }
+}
+
+const book1 = new Book('book1', 'author1');
+Book.addBook(book1);
+
 let books = [book1];
 const form = document.querySelector('#form');
 const title = form.elements[0];
@@ -58,11 +74,6 @@ window.addEventListener('load', () => {
     books = [];
   }
 });
-
-function Book(title, author) {
-  this.title = title;
-  this.author = author;
-}
 
 addBtn.addEventListener('click', () => {
   const newBook = new Book(title.value, author.value);
