@@ -57,6 +57,8 @@ window.addEventListener('load', () => {
   Book.books = JSON.parse(localStorage.getItem('books'));
   if (Book.books) {
     appendAllBooks();
+  } else {
+    Book.books = [];
   }
 });
 
