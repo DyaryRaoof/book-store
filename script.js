@@ -1,8 +1,20 @@
-const book1 = {
-  title: 'book1',
-  author: 'author1',
-};
-let books = [book1];
+class Book {
+  static books = [];
+
+  constructor(title, author) {
+    this.title = title;
+    this.author = author;
+  }
+
+  static addBook(book) {
+    this.books.push(book);
+  }
+
+  static rmvBook(book) {
+    this.books = this.books.filter((a) => a !== book);
+  }
+}
+
 const form = document.querySelector('#form');
 const title = form.elements[0];
 const author = form.elements[1];
@@ -10,7 +22,7 @@ const addBtn = document.querySelector('#addBtn');
 const bookList = document.querySelector('#book-list');
 
 function saveBooksLocally() {
-  localStorage.setItem('books', JSON.stringify(books));
+  localStorage.setItem('books', JSON.stringify(Book.books));
 }
 const appendBook = (book, index) => {
   const bookElement = document.createElement('div');
@@ -34,7 +46,7 @@ const appendBook = (book, index) => {
   bookElement.appendChild(hr);
   rmvBtn.addEventListener('click', () => {
     bookElement.remove();
-    books = books.filter((a) => a !== books[index]);
+    Book.rmvBook(Book.books[index]);
     saveBooksLocally();
   });
 
@@ -43,29 +55,22 @@ const appendBook = (book, index) => {
 };
 
 function appendAllBooks() {
-  books.forEach((book, index) => {
+  Book.books.forEach((book, index) => {
     appendBook(book, index);
   });
 }
 
 window.addEventListener('load', () => {
-  books = JSON.parse(localStorage.getItem('books'));
-  if (books) {
-    if (books.length > 0) {
-      appendAllBooks();
-    }
+  Book.books = JSON.parse(localStorage.getItem('books'));
+  if (Book.books) {
+    appendAllBooks();
   } else {
-    books = [];
+    Book.books = [];
   }
 });
 
-function Book(title, author) {
-  this.title = title;
-  this.author = author;
-}
-
 addBtn.addEventListener('click', () => {
   const newBook = new Book(title.value, author.value);
-  books.push(newBook);
-  appendBook(newBook, books.length - 1);
+  Book.addBook(newBook);
+  appendBook(newBook, Book.books.length - 1);
 });
