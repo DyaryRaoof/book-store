@@ -26,15 +26,17 @@ function saveBooksLocally() {
 }
 
 const appendBook = (book, index) => {
-  const bookElement = document.createElement('div');
+  const bookElement = document.createElement('tr');
+  const td = document.createElement('td');
+  td.classList.add('border-0');
   const rmvBtn = document.createElement('button');
-  rmvBtn.classList.add('remove-button');
+  rmvBtn.classList.add('remove-button', 'btn', 'btn-danger');
   rmvBtn.innerText = 'Remove';
 
-  bookElement.classList.add('book-element-wrapper');
-  bookElement.innerHTML = `<span>${book.title}</span><br><span>${book.author}</span><br>`;
-  bookElement.appendChild(rmvBtn);
-  bookElement.appendChild(document.createElement('hr'));
+  td.appendChild(rmvBtn);
+
+  bookElement.innerHTML = `<td class="align-middle border-0">"${book.title}" by ${book.author}</td>`;
+  bookElement.appendChild(td);
 
   bookList.appendChild(bookElement);
   saveBooksLocally();
