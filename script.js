@@ -37,7 +37,7 @@ function saveBooksLocally() {
 const appendBook = (book, index) => {
   const bookElement = document.createElement('tr');
   const td = document.createElement('td');
-  td.classList.add('border-0');
+  td.classList.add('border-0', 'd-flex', 'justify-content-end');
   const rmvBtn = document.createElement('button');
   rmvBtn.classList.add('remove-button', 'btn', 'btn-danger');
   rmvBtn.innerText = 'Remove';
