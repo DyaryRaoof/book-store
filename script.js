@@ -1,5 +1,5 @@
-import { DateTime } from 'luxon';
-
+// import { DateTime } from './luxon.js';
+const { DateTime } = window.luxon;
 class Book {
   static books = [];
 
@@ -83,18 +83,27 @@ listNav.addEventListener('click', () => {
   listSection.classList.remove('d-none');
   addSection.classList.add('d-none');
   contactSection.classList.add('d-none');
+  contactNav.classList.remove('active');
+  listNav.classList.add('active');
+  addNav.classList.remove('active');
 });
 
 addNav.addEventListener('click', () => {
   listSection.classList.add('d-none');
   addSection.classList.remove('d-none');
   contactSection.classList.add('d-none');
+  listNav.classList.remove('active');
+  contactNav.classList.remove('active');
+  addNav.classList.add('active');
 });
 
 contactNav.addEventListener('click', () => {
   listSection.classList.add('d-none');
   addSection.classList.add('d-none');
   contactSection.classList.remove('d-none');
+  contactNav.classList.add('active');
+  listNav.classList.remove('active');
+  addNav.classList.remove('active');
 });
 
-date.innerHTML = DateTime.now;
+date.innerHTML = DateTime.now().toLocaleString(DateTime.DATETIME_MED);
