@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 class Book {
   static books = [];
 
@@ -20,6 +22,13 @@ const title = form.elements[0];
 const author = form.elements[1];
 const addBtn = document.querySelector('#add-btn');
 const bookList = document.querySelector('#book-list');
+const listNav = document.querySelector('#list-nav-item');
+const addNav = document.querySelector('#add-nav-item');
+const contactNav = document.querySelector('#contact-nav-item');
+const listSection = document.querySelector('#list-section');
+const addSection = document.querySelector('#add-section');
+const contactSection = document.querySelector('#contact-section');
+const date = document.querySelector('#date');
 
 function saveBooksLocally() {
   localStorage.setItem('books', JSON.stringify(Book.books));
@@ -69,3 +78,23 @@ addBtn.addEventListener('click', () => {
   Book.addBook(newBook);
   appendBook(newBook, Book.books.length - 1);
 });
+
+listNav.addEventListener('click', () => {
+  listSection.classList.remove('d-none');
+  addSection.classList.add('d-none');
+  contactSection.classList.add('d-none');
+});
+
+addNav.addEventListener('click', () => {
+  listSection.classList.add('d-none');
+  addSection.classList.remove('d-none');
+  contactSection.classList.add('d-none');
+});
+
+contactNav.addEventListener('click', () => {
+  listSection.classList.add('d-none');
+  addSection.classList.add('d-none');
+  contactSection.classList.remove('d-none');
+});
+
+date.innerHTML = DateTime.now;
