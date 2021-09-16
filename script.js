@@ -107,3 +107,7 @@ contactNav.addEventListener('click', () => {
 });
 
 date.innerHTML = DateTime.now().toLocaleString(DateTime.DATETIME_MED);
+
+setInterval(() => {
+  date.innerHTML = DateTime.now().toLocaleString(DateTime.DATETIME_MED);
+}, 60000);
