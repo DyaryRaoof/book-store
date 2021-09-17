@@ -2,6 +2,7 @@ body {
   font-family: 'Ubuntu', sans-serif !important;
 }
 
-#list-section {
-  min-height: 67vh;
+.vertical-line {
+  width: 1px;
+  background-color: black;
 }
