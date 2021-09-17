@@ -25,13 +25,20 @@ const bookList = document.querySelector('#book-list');
 const listNav = document.querySelector('#list-nav-item');
 const addNav = document.querySelector('#add-nav-item');
 const contactNav = document.querySelector('#contact-nav-item');
+const navItems = [listNav, addNav, contactNav];
 const listSection = document.querySelector('#list-section');
 const addSection = document.querySelector('#add-section');
 const contactSection = document.querySelector('#contact-section');
+const sections = [listSection, addSection, contactSection];
 const date = document.querySelector('#date');
+const sucessMsg = document.querySelector('#success-msg');
 
 function saveBooksLocally() {
   localStorage.setItem('books', JSON.stringify(Book.books));
+}
+
+function saveActiveNavItemLocally(id) {
+  localStorage.setItem('activeNavItem', id);
 }
 
 const appendBook = (book, index) => {
@@ -39,7 +46,7 @@ const appendBook = (book, index) => {
   const td = document.createElement('td');
   td.classList.add('border-0', 'd-flex', 'justify-content-end');
   const rmvBtn = document.createElement('button');
-  rmvBtn.classList.add('remove-button', 'btn', 'btn-danger');
+  rmvBtn.classList.add('remove-button', 'btn', 'btn-danger', 'btn-sm');
   rmvBtn.innerText = 'Remove';
 
   td.appendChild(rmvBtn);
@@ -64,7 +71,54 @@ function appendAllBooks() {
   });
 }
 
+function updateDate() {
+  date.innerHTML = DateTime.now().toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS);
+}
+
+function displaySection(id) {
+  sections.forEach((section) => {
+    if (section.id === id) {
+      section.classList.remove('d-none');
+    } else {
+      section.classList.add('d-none');
+    }
+  });
+}
+
+function activateNavItem(id) {
+  navItems.forEach((navItem) => {
+    if (navItem.id === id) {
+      navItem.classList.add('active');
+    } else {
+      navItem.classList.remove('active');
+    }
+  });
+}
+
+function getSectionId(navItemId) {
+  let sectionId;
+  switch (navItemId) {
+    case 'list-nav-item':
+      sectionId = 'list-section';
+      break;
+    case 'add-nav-item':
+      sectionId = 'add-section';
+      break;
+    case 'contact-nav-item':
+      sectionId = 'contact-section';
+      break;
+    default:
+      sectionId = '';
+  }
+  return sectionId;
+}
+
 window.addEventListener('load', () => {
+  updateDate();
+  const navItemId = localStorage.getItem('activeNavItem');
+  const sectionId = getSectionId(navItemId);
+  displaySection(sectionId);
+  activateNavItem(navItemId);
   Book.books = JSON.parse(localStorage.getItem('books'));
   if (Book.books) {
     appendAllBooks();
@@ -74,40 +128,35 @@ window.addEventListener('load', () => {
 });
 
 addBtn.addEventListener('click', () => {
-  const newBook = new Book(title.value, author.value);
-  Book.addBook(newBook);
-  appendBook(newBook, Book.books.length - 1);
+  sucessMsg.innerText = '';
+  if (title.value.length !== 0 && author.value.length !== 0) {
+    const newBook = new Book(title.value, author.value);
+    Book.addBook(newBook);
+    appendBook(newBook, Book.books.length - 1);
+    sucessMsg.innerText = `"${title.value}" by ${author.value} added`;
+  }
+  title.value = '';
+  author.value = '';
 });
 
 listNav.addEventListener('click', () => {
-  listSection.classList.remove('d-none');
-  addSection.classList.add('d-none');
-  contactSection.classList.add('d-none');
-  contactNav.classList.remove('active');
-  listNav.classList.add('active');
-  addNav.classList.remove('active');
+  displaySection(listSection.id);
+  activateNavItem(listNav.id);
+  saveActiveNavItemLocally(listNav.id);
 });
 
 addNav.addEventListener('click', () => {
-  listSection.classList.add('d-none');
-  addSection.classList.remove('d-none');
-  contactSection.classList.add('d-none');
-  listNav.classList.remove('active');
-  contactNav.classList.remove('active');
-  addNav.classList.add('active');
+  displaySection(addSection.id);
+  activateNavItem(addNav.id);
+  saveActiveNavItemLocally(addNav.id);
 });
 
 contactNav.addEventListener('click', () => {
-  listSection.classList.add('d-none');
-  addSection.classList.add('d-none');
-  contactSection.classList.remove('d-none');
-  contactNav.classList.add('active');
-  listNav.classList.remove('active');
-  addNav.classList.remove('active');
+  displaySection(contactSection.id);
+  activateNavItem(contactNav.id);
+  saveActiveNavItemLocally(contactNav.id);
 });
 
-date.innerHTML = DateTime.now().toLocaleString(DateTime.DATETIME_MED);
-
 setInterval(() => {
-  date.innerHTML = DateTime.now().toLocaleString(DateTime.DATETIME_MED);
+  updateDate();
 }, 1000);
